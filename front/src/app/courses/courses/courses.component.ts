@@ -1,6 +1,7 @@
 import { CoursesService } from './../service/courses.service';
 import { Component, OnInit } from '@angular/core';
 import { Course } from '../model/course';
+import { Observable, first, tap } from 'rxjs';
 
 
 @Component({
@@ -9,11 +10,13 @@ import { Course } from '../model/course';
   styleUrls: ['./courses.component.scss']
 })
 export class CoursesComponent{
-  courses:Course[] = [];
+  courses:Observable<Course[]>;
   //coursesService: CoursesService;
   displayedColumns =["name","category"];
   constructor(private coursesService: CoursesService){
-    //this.coursesService = new CoursesService();
-    this.courses = this.coursesService.list();
+    this.courses = this.coursesService.list()
+    .pipe(
+      first(),
+      tap(courses=>console.log(courses)));
   }
 }
